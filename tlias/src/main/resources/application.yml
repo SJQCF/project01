@@ -1,0 +1,17 @@
+#配置名字
+spring:
+    application:
+        name: web-project01
+#配置数据库
+    datasource:
+      url: jdbc:mysql://localhost:3306/tlias
+      username: root
+      password: 8823431111
+      driver-class-name: com.mysql.cj.jdbc.Driver #配置数据库连接池
+
+#配置mybatis
+mybatis:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl #配置mybatis日志
+    map-underscore-to-camel-case: true #配置mybatis驼峰命名
+

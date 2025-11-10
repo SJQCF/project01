@@ -6,6 +6,7 @@ import com.sjqcf.service.DeptService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -18,5 +19,29 @@ public class DeptServiceImpl implements DeptService {
     public List<Dept> findAll(){
         List<Dept> depts= deptMapper.findAll();
         return depts;
+    }
+
+    @Override
+    public void deleteById(Integer id){
+        deptMapper.deleteById(id);
+    }
+
+    @Override
+    public void add(Dept dept){
+        dept.setCreateTime(LocalDateTime.now());
+        dept.setUpdateTime(LocalDateTime.now());
+        deptMapper.add(dept);
+    }
+
+    @Override
+    public Dept findById(Integer id){
+        Dept dept = deptMapper.findById(id);
+        return dept;
+    }
+
+    @Override
+    public void update(Dept dept){
+        dept.setUpdateTime(LocalDateTime.now());
+        deptMapper.update(dept);
     }
 }

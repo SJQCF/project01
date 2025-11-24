@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sjqcf.mapper.StudentMapper">
+    <select id="page" resultType="com.sjqcf.pojo.Student">
+        select s.* from tlias.student s order by s.update_time
+    </select>
+
+    <insert id="save">
+        insert into student (name,no,gender,phone,degree,clazz_id,create_time,update_time
+                            <if test="idCard != null and idCard != ''">
+                                ,id_card
+                            </if>
+                            <if test="isCollege != null and isCollege != ''">
+                                ,is_college
+                            </if>
+                            <if test="address != null and address != ''">
+                                ,address
+                            </if>
+                            <if test="graduationDate != null">
+                                ,graduation_date
+                            </if>
+        )
+        values (#{name},#{no},#{gender},#{phone},#{degree},#{clazzId},#{createTime},#{updateTime}
+        <if test="idCard != null and idCard != ''">
+            ,#{idCard}
+        </if>
+        <if test="isCollege != null and isCollege != ''">
+            ,#{isCollege}
+        </if>
+        <if test="address != null and address != ''">
+            ,#{address}
+        </if>
+        <if test="graduationDate != null">
+            ,#{graduationDate}
+        </if>
+        )
+    </insert>
+
+    <select id="findById" resultType="com.sjqcf.pojo.Student">
+        select s.* from student s where s.id = #{id}
+    </select>
+
+    <update id="update">
+        update student set id = #{id},
+                           name = #{name},
+                           no = #{no},
+                           gender = #{gender},
+                           phone = #{phone},
+                           degree = #{degree},
+                           violation_count = #{violationCount},
+                           violation_score = #{violationScore},
+                           clazz_id = #{clazzId},
+                           update_time = #{updateTime}
+                           <if test="idCard != null and idCard != ''">
+                                ,id_card = #{idCard}
+                           </if>
+                           <if test="isCollege != null and isCollege != ''">
+                                ,is_college = #{isCollege}
+                           </if>
+                           <if test="address != null and address != ''">
+                                ,address = #{address}
+                           </if>
+                           <if test="graduationDate != null">
+                               ,graduation_date = #{graduationDate}
+                           </if>
+                           where id = #{id}
+        </update>
+
+    <delete id="delete">
+        delete from student where id in
+                            <foreach collection="ids" item="id" separator="," open="(" close=")">
+                                #{id}
+                            </foreach>
+    </delete>
+
+    <update id="violation">
+        update student set violation_count = violation_count + 1,
+                           violation_score = violation_score + #{score}
+        where id = #{id}
+    </update>
+
+    <select id="countStudentCountData" resultType="java.util.Map">
+        select count(s.clazz_id) as count,c.name as clazz from tlias.student s left join tlias.clazz c on s.clazz_id = c.id group by s.clazz_id order by count(s.clazz_id)
+    </select>
+
+    <select id="countStudentDegreeData" resultType="java.util.Map">
+        select count(s.degree) as value,(case when s.degree = 1 then '初中'
+                                      when s.degree = 2 then '高中'
+                                      when s.degree = 3 then '大专'
+                                      when s.degree = 4 then '本科'
+                                      when s.degree = 5 then '硕士'
+                                      else '博士'
+                                   end) as name
+        from tlias.student s group by s.degree order by count(s.degree);
+    </select>
+</mapper>
+

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace = "com.sjqcf.mapper.ClazzMapper">
+    <select id="getClazzs" resultType="com.sjqcf.pojo.Clazz">
+        select c.id,c.name,c.room,c.begin_date,c.end_date,c.master_id,c.create_time,c.update_time,
+               e.name as mastername
+        from tlias.clazz c left join tlias.emp e on c.master_id = e.id
+        <where>
+            <if test="name != '' and name != null">
+                c.name like concat('%',#{name},'%')
+            </if>
+            <if test="begin != null and end != null">
+                and c.begin_date between #{begin} and #{end}
+                and c.end_date between #{begin} and #{end}
+            </if>
+        </where>
+        order by c.update_time desc
+    </select>
+
+    <insert id="save">
+        insert into tlias.clazz (name, room, begin_date, end_date,
+                                 <if test="masterId != null and masterId != ''">
+                                 master_id,
+                                 </if>
+                                 subject, create_time, update_time)
+        values (#{name},#{room},#{beginDate},#{endDate},
+                <if test="masterId != null and masterId != ''">
+                    #{masterId},
+                </if>
+                #{subject},#{createTime},#{updateTime}
+                )
+    </insert>
+
+    <select id="getClazzById" resultType="com.sjqcf.pojo.Clazz">
+        select c.id,
+               c.name,
+               c.room,
+               c.begin_date,
+               c.end_date,
+               c.master_id,
+               c.subject,
+               c.update_time,
+               c.create_time
+               from tlias.clazz c where id = #{id}
+    </select>
+
+    <update id="update">
+        update tlias.clazz set id = #{id},
+            name = #{name},
+            room = #{room},
+            begin_date = #{beginDate},
+            end_date = #{endDate},
+            master_id = #{masterId}
+            <if test="subject != null and subject != ''">
+                ,subject = #{subject}
+            </if>
+        where id = #{id}
+    </update>
+
+    <select id="findClaHasStu" resultType="java.lang.Integer">
+        select count(*) from tlias.student where clazz_id = #{id}
+    </select>
+
+    <delete id="delete">
+        delete from tlias.clazz where id = #{id}
+    </delete>
+
+    <select id="findAll" resultType="com.sjqcf.pojo.Clazz">
+        select * from tlias.clazz;
+    </select>
+</mapper>

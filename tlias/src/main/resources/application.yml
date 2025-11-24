@@ -1,13 +1,20 @@
 #配置名字
 spring:
-    application:
+  application:
         name: web-project01
 #配置数据库
-    datasource:
-      url: jdbc:mysql://localhost:3306/tlias
-      username: root
-      password: 8823431111
-      driver-class-name: com.mysql.cj.jdbc.Driver #配置数据库连接池
+  datasource:
+    url: jdbc:mysql://localhost:3306/tlias
+    username: root
+    password: 8823431111
+    driver-class-name: com.mysql.cj.jdbc.Driver #配置数据库连接池
+  servlet:
+    multipart:
+      #最大单个文件大小
+      max-file-size: 10MB
+      #最大请求大小
+      max-request-size: 100MB
+
 
 #配置mybatis
 mybatis:
@@ -15,3 +22,9 @@ mybatis:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl #配置mybatis日志
     map-underscore-to-camel-case: true #配置mybatis驼峰命名
 
+#阿里云配置
+aliyun:
+  oss:
+    endpoint: https://oss-cn-beijing.aliyuncs.com
+    bucketName: sjqcf-web-project01
+    region: cn-beijing
